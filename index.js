@@ -18,7 +18,26 @@ server.get("/api/users", (req, res) => {
             error: "The users information could not be retrieved."
         })
         );
-})
+});
+
+server.get("/api/users/:id", (req, res) => {
+    const id = req.params.id;
+    db.findById(id)
+    .then(dbById => {
+        if (dbById) {
+            res.send(dbById);
+        } else {
+            res.status(404).json({
+                message: "The user with the specified ID does not exist."
+            })
+        }
+    })
+    .catch(error => 
+        res
+        .status(500)
+        .json({ error: "The user information could not be retrieved."})
+    ); 
+});
 
 
 server.listen(process.env.PORT || 5000, () => {
