@@ -56,6 +56,25 @@ server.delete("/api/users/:id", (req, res) => {
     );
 });
 
+server.post("/api/users", (req, res) => {
+    const dbData = req.body;
+    if (!dbData.name || !dbData.bio) {
+        res
+        .status(400)
+        .json({ errorMessage: "Please provide name and bio for the user."})
+    } else {
+        db.insert(dbData)
+        .then(user => {
+            res.status(201).json(user);
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: "There was an error while saving the user to the database"
+            });
+        });
+    }
+});
+
 server.put("/api/users/:id", (req, res) => {
     const id = req.params.id;
     const changes = req.body;
